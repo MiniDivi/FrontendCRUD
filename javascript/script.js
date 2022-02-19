@@ -45,13 +45,41 @@ var data = [
 
 var nextId = 10006;
 
+
 $(document).ready(function() {
     displayEmployeeList();
 
     //aggiunge un nuovo dipendente
+    $("#create-employee-form").submit(function(e){
+      e.preventDefault();
+      let firstName = $("#nome").val();
+      let lastName = $("#cognome").val();
+      let gender = $('input[name=sesso]:checked', '#create-employee-form').val();
+      let birthDate = $("#data-nascita").val();
+      let hireDate = $("#data-assunzione").val();
 
-    
+      data.push({id: nextId, birthDate: birthDate, firstName: firstName, lastName: lastName, gender: gender, hireDate: hireDate});
+      nextId++;
 
+      //ripropone la lista con i nuovi valori
+      displayEmployeeList();
+
+      //nasconde il modal
+      $("#create-employee").hide();    
+      //senza di questo il backdrop del modal non viene rimosso
+      $('.modal-backdrop').remove(); 
+    });
+
+    $("body").on("click",".delete-employee", function(){
+      let id = $(this).parent("td").data("id");
+      for(let i = 0; i < data.length; i++){
+        if(data[i].id == id){
+          data.splice(i, 1);
+          break;
+        }
+      }
+      displayEmployeeList();
+    });
 });
     
     function displayEmployeeList(){
@@ -65,7 +93,7 @@ $(document).ready(function() {
             rows += '<td>' + value.birthDate + '</td>';
             rows += '<td>' + value.hireDate + '</td>';
             rows += '<td data-id="'+value.id+'">';
-                rows += '<button class="btn btn-danger">Elimina</button>';
+                rows += '<button class="btn btn-danger delete-employee delete-employee-button"><i class="fa-solid fa-trash-can"></i></button>';
                 rows += '</td>';
             rows += '</td>'; 
         });
