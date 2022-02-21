@@ -86,6 +86,60 @@
       </form>
       <!-- / new employee modal -->
 
+            <!-- edit employee modal-->
+            <form id="edit-employee-form">
+              <div class="modal fade" id="edit-employee" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="staticBackdropLabel">Modifica dati</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+      
+                      <div class="mb-3">
+                        <label for="nome-edit" class="form-label">Nome</label>
+                        <input type="text" id="nome-edit" name="nome-edit" class="form-control" required>
+                      </div>
+      
+                      <div class="mb-3">
+                        <label for="cognome-edit" class="form-label">Cognome</label>
+                        <input type="text" id="cognome-edit" name="cognome-edit" class="form-control" required>
+                      </div>
+      
+                      <div class="row g-3 align-items-center mb-3">
+                        <div class="col-auto">
+                          <label for="sesso-edit" class="col-form-label">Sesso</label>
+                        </div>
+                        <div class="col-auto" name="sesso-edit">
+                          <input class="form-check-input" type="radio" name="sesso-edit" id="edit-sesso-m" value="M">
+                          <label for="M" class="form-check-label">M</label>
+                          <input class="form-check-input" type="radio" name="sesso-edit" id="edit-sesso-f" value="F">
+                          <label for="F" class="form-check-label">F</label>
+                        </div>
+                      </div>
+      
+                      <div class="mb-3">
+                        <label for="data-nascita-edit" class="form-label">Data di nascita</label>
+                        <input type="date" id="data-nascita-edit" name="data-nascita" class="form-control" required>
+                      </div>
+      
+                      <div class="mb-3">
+                        <label for="data-assunzione-edit" class="form-label">Data di assunzione</label>
+                        <input type="date" id="data-assunzione-edit" name="data-assunzione-edit" class="form-control" required>
+                      </div>
+      
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                      <button type="submit" class="btn btn-primary" id="edit-employee-submit">Conferma</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <!-- / edit employee modal -->
     </div>
 
     <table class="table table-striped text-center table-bordered">
