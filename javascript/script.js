@@ -1,19 +1,13 @@
 let data = [];
 let nextId = 10006;
 let id;
-
+let fistPage;
+let totalPages;
+let currentPage = 0;
 
 $(document).ready(function() {
 
-    $.ajax({
-      method: "GET",
-      url: "http://localhost:8080/employees"
-    })
-    .done(function(msg) {
-      data = msg['_embedded']['employees'];
-      displayEmployeeList();
-    });
-
+    getData();
 
     //aggiunge un nuovo dipendente
     $("#create-employee-form").submit(function(e){
@@ -80,7 +74,6 @@ $(document).ready(function() {
           
           for(let i = 0; i < data.length; i++){
             if(data[i].id == id){
-              console.log(firstName);
               data[i].firstName = firstName;
               data[i].lastName = lastName;
               data[i].gender = gender;
@@ -97,10 +90,26 @@ $(document).ready(function() {
           //senza di questo il backdrop del modal non viene rimosso
           $('.modal-backdrop').remove(); 
         });
-    
 
-
+        $("body").on("click",".page-item", function(){
+          currentPage = $(this).data('page')
+          getData();
 });
+});
+
+  function getData(){
+    $.ajax({
+      method: "GET",
+      url: `http://localhost:8080/employees?page=${currentPage}&size=${20}`
+    })
+    .done(function(msg) {
+      data = msg['_embedded']['employees'];
+      nextPage = msg['_links']['next']['href'];
+      totalPages = msg['page']['totalPages'];
+      displayEmployeeList();
+      displayPagination();
+    });
+  }
     
     function displayEmployeeList(){
         let rows = '';
@@ -119,4 +128,33 @@ $(document).ready(function() {
             rows += '</td>'; 
         });
         $("tbody").html(rows);
+    }
+
+  
+    function displayPagination(){
+      let code = '';
+      let dataPage = currentPage;
+      
+        code += '<nav aria-label="Page navigation example">';
+        code += '<ul class="pagination justify-content-center pagination-lg">';
+
+        code += '<li class="page-item" data-page="' + (currentPage-1) + '"> '  +
+        '<a class="page-link" href="#" aria-label="Previous">' +
+          '<span aria-hidden="true">&laquo;</span></a></li>';
+
+      for(let i = currentPage; i < currentPage+6; i++){
+        dataPage = i;
+        if(i === currentPage){
+          code += '<li class="page-item active" data-page="' + dataPage + '"><a class="page-link" href="#">' + (dataPage+1) + '</a></li>'
+        } else {
+        code += '<li class="page-item" data-page="' + dataPage + '"><a class="page-link" href="#">' + (dataPage+1) + '</a></li>'
+        }
+      }
+
+      code += '<li class="disabled"><a class="page-link" >...</a></li>'
+      code += '<li class="page-item" data-page="' +  totalPages + '"><a class="page-link" href="#">' + (totalPages) + '</a></li>'
+      code += '<li class="page-item" data-page="' + (dataPage+1) + '"> '  +
+      '<a class="page-link" href="#" aria-label="Next">' +
+        '<span aria-hidden="true">&raquo</span></a></li>';
+      $("pagination").html(code);
     }
