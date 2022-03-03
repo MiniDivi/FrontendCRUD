@@ -1,7 +1,7 @@
 let data = [];
 let nextId = 10006;
 let id;
-let fistPage;
+let firstPage = 0;
 let totalPages;
 let currentPage = 0;
 
@@ -137,7 +137,6 @@ function displayEmployeeList() {
   $("tbody").html(rows);
 }
 
-
 function displayPagination() {
   let code = '';
   let dataPage = currentPage;
@@ -146,35 +145,55 @@ function displayPagination() {
   code += '<ul class="pagination justify-content-center">';
 
   if (currentPage === 0) {
-    code += '<li class="disabled" data-page="' + (currentPage - 1) + '"> ' +
-      '<a class="page-link" href="#" aria-label="Previous">' +
-      '<span aria-hidden="true">&laquo;</span></a></li>';
+      code += '<li class="disabled" data-page="' + (currentPage - 1) + '"> ' +
+          '<a class="page-link" href="#" aria-label="Previous">' +
+          '<span aria-hidden="true">&laquo;</span></a></li>';
   } else {
-    code += '<li class="page-item" data-page="' + (currentPage - 1) + '"> ' +
-      '<a class="page-link" href="#" aria-label="Previous">' +
-      '<span aria-hidden="true">&laquo;</span></a></li>';
+      code += '<li class="page-item" data-page="' + (currentPage - 1) + '"> ' +
+          '<a class="page-link" href="#" aria-label="Previous">' +
+          '<span aria-hidden="true">&laquo;</span></a></li>';
   }
 
-
-  for (let i = (currentPage == 0 ? (currentPage) : (currentPage < 2 ? (currentPage - 1) : (currentPage < 3 ? (currentPage-2) : (currentPage-3)))); i < (currentPage < 3 ? currentPage + 6 : (currentPage + 4)); i++) {
-    dataPage = i;
-    if (i === currentPage) { //Per far sì che l'elemenyo venga segnato come active
-      code += '<li class="page-item active" data-page="' + dataPage + '"><a class="page-link" href="#">' + (dataPage + 1) + '</a></li>'
-    } else {
-      code += '<li class="page-item" data-page="' + dataPage + '"><a class="page-link" href="#">' + (dataPage + 1) + '</a></li>'
-    }
+  if (currentPage != 0 && currentPage != 1) {
+      code += '<li class="page-item" data-page="' + firstPage + '"><a class="page-link" href="#">' + (firstPage+1) + '</a></li>'
+      if(currentPage != 2)
+      code += '<li class="disabled"><a class="page-link" >...</a></li>'
   }
 
-  code += '<li class="disabled"><a class="page-link" >...</a></li>'
-  code += '<li class="page-item" data-page="' + (totalPages-2) + '"><a class="page-link" href="#">' + (totalPages+1) + '</a></li>'
-  if(currentPage === totalPages){
-    code += '<li class="disabled" data-page="' + (currentPage + 1) + '"> ' +
-    '<a class="page-link" href="#" aria-label="Next">' +
-    '<span aria-hidden="true">&raquo</span></a></li>';
+  for (let i = getStartPage(); i < currentPage+2; i++) {
+      dataPage = i;
+      if (i === currentPage) { //Per far sì che l'elemento venga segnato come active
+          code += '<li class="page-item active" data-page="' + dataPage + '"><a class="page-link" href="#">' + (dataPage + 1) + '</a></li>'
+      } else {
+          code += '<li class="page-item" data-page="' + dataPage + '"><a class="page-link" href="#">' + (dataPage + 1) + '</a></li>'
+      }
+      if(currentPage == totalPages-2){
+          break;
+      }
+  }
+
+  if(currentPage != totalPages-2){
+      code += '<li class="disabled"><a class="page-link" >...</a></li>'
+      code += '<li class="page-item" data-page="' + (totalPages - 2) + '"><a class="page-link" href="#">' + (totalPages + 1) + '</a></li>'
+  }
+
+  if (currentPage === totalPages) {
+      code += '<li class="disabled" data-page="' + (currentPage + 1) + '"> ' +
+          '<a class="page-link" href="#" aria-label="Next">' +
+          '<span aria-hidden="true">&raquo</span></a></li>';
   } else {
-    code += '<li class="page-item" data-page="' + (currentPage + 1) + '"> ' +
-    '<a class="page-link" href="#" aria-label="Next">' +
-    '<span aria-hidden="true">&raquo</span></a></li>';
+      code += '<li class="page-item" data-page="' + (currentPage + 1) + '"> ' +
+          '<a class="page-link" href="#" aria-label="Next">' +
+          '<span aria-hidden="true">&raquo</span></a></li>';
   }
-    $("pagination").html(code);
+  $("pagination").html(code);
+}
+
+function getStartPage() {
+
+  if (currentPage === 0) {
+      return currentPage;
+  } else {
+      return currentPage - 1;
+  }
 }
