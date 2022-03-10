@@ -14,11 +14,12 @@ $(document).ready(function () {
   //aggiunge un nuovo dipendente
   $("#create-employee-form").submit(function (e) {
     e.preventDefault();
-    let firstName = $("#nome").val();
-    let lastName = $("#cognome").val();
-    let gender = $('input[name=sesso]:checked', '#create-employee-form').val();
-    let birthDate = $("#data-nascita").val();
-    let hireDate = $("#data-assunzione").val();
+    employeeData.firstName = $("#nome").val();
+    employeeData.lastName = $("#cognome").val();
+    employeeData.gender = $('input[name=sesso]:checked', '#create-employee-form').val();
+    employeeData.birthDate = $("#data-nascita").val();
+    employeeData.hireDate = $("#data-assunzione").val();
+    createNewEmployee();
 
     //ripropone la lista con i nuovi valori
     displayEmployeeList();
@@ -71,7 +72,7 @@ $(document).ready(function () {
 function getData() {
   $.ajax({
     method: "GET",
-    url: `${defaultPath}/employees?page=${currentPage}&size=${5}`
+    url: `${defaultPath}/employees?page=${currentPage}&size=${20}`
   })
     .done(function (msg) {
       data = msg['_embedded']['employees'];
@@ -113,7 +114,19 @@ function editEmployee(){
     contentType: "application/json",
     dataType: 'json',
     data: JSON.stringify(employeeData)
-    //data: "id=employeeData.id&firstName=employeeData.firstName&lastName=employeeData.lastName&gender=employeeData.gender&birthDate=employeeData.birthDate&hireDate=employeeData.hireDate"
+  })
+  .done(function (msg) {
+    location.reload();
+  });
+}
+
+function createNewEmployee(){
+  $.ajax({
+    method: "POST",
+    url: `${defaultPath}/employees`,
+    contentType: "application/json",
+    dataType: 'json',
+    data: JSON.stringify(employeeData)
   })
   .done(function (msg) {
     location.reload();
@@ -140,8 +153,8 @@ function displayEmployeeList() {
 }
 
 function openModal(){
-  console.log(employeeData.firstName);
-        var myModal = new bootstrap.Modal(document.getElementById("edit-employee"), {});
+
+  var myModal = new bootstrap.Modal(document.getElementById("edit-employee"), {});
         myModal.show();
         $('#nome-edit').val(employeeData.firstName);
         $('#cognome-edit').val(employeeData.lastName);
