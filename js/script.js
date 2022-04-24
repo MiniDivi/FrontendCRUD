@@ -18,13 +18,13 @@ let firstPage = 0;
 
 //variabili generali
 let editEmployee = true; //Serve per sapere se il form nel modal servirà per aggiungere o moficare un impiegato 
-const defaultPath = "http://localhost:8080";
+const defaultPath = "http://localhost:8080/index.php";
 
 $(document).ready(function () {
     getData(); //prendo i dati dal server
 
     //Se nel localStorage l'item currentPage non ha valore, viene inizializzato a 0.
-    if(localStorage.getItem("currentPage") === null){
+    if (localStorage.getItem("currentPage") === null) {
         localStorage.setItem("currentPage", 0);
     }
 
@@ -97,14 +97,15 @@ function displayEmployeeList() {
 //chiamata GET (per ricevere dal server tutti gli impiegati)
 function getData() {
     $.ajax({
-            method: "GET",
-            url: `http://localhost:8080/employees?page=${parseInt(localStorage.getItem("currentPage"))}&size=${5}`
-        })
+        method: "GET",
+        //url: `${defaultPath}/employees?page=${parseInt(localStorage.getItem("currentPage"))}&size=${5}`
+        url: `${defaultPath}?page=${parseInt(localStorage.getItem("currentPage"))}&size=${5}`
+    })
         .done(function (msg) {
             data = msg['_embedded']['employees'];
             totalPages = msg['page']['totalPages'];
-       
-            if (parseInt(localStorage.getItem("currentPage")) > (totalPages-1)) {
+
+            if (parseInt(localStorage.getItem("currentPage")) > (totalPages - 1)) {
                 nextPage = msg['_links']['next']['href'];
             }
             displayEmployeeList(); //mostro la lista degli impiegati
@@ -114,9 +115,10 @@ function getData() {
 //chiamata GET (per ricevere dal server l'impiegato richiesto)
 function getEmployeeData(id) {
     $.ajax({
-            method: "GET",
-            url: `${defaultPath}/employees/${id}`
-        })
+        method: "GET",
+        //url: `${defaultPath}/employees/${id}`
+        url: `${defaultPath}/${id}`
+    })
         .done(function (msg) {
             employeeData.id = msg.id;
             employeeData.firstName = msg.firstName;
@@ -130,12 +132,12 @@ function getEmployeeData(id) {
 //chiamata POST (per creare un nuovo impiegato)
 function createEmployee() {
     $.ajax({
-            method: "POST",
-            url: `${defaultPath}/employees`,
-            contentType: "application/json",
-            dataType: 'json',
-            data: JSON.stringify(employeeData)
-        })
+        method: "POST",
+        url: `${defaultPath}/employees`,
+        contentType: "application/json",
+        dataType: 'json',
+        data: JSON.stringify(employeeData)
+    })
         .done(function (msg) {
             location.reload();
         });
@@ -143,9 +145,9 @@ function createEmployee() {
 //Chiamata DELETE (per eliminare un impiegato)
 function deleteEmployee(id) {
     $.ajax({
-            method: "DELETE",
-            url: `${defaultPath}/employees/${id}`
-        })
+        method: "DELETE",
+        url: `${defaultPath}/employees/${id}`
+    })
         .done(function () {
             getData();
             displayEmployeeList();
@@ -154,12 +156,12 @@ function deleteEmployee(id) {
 //Chiamata PUT (per modificare le informazioni di un dipendente)
 function editEmployeePUT() {
     $.ajax({
-            method: "PUT",
-            url: `${defaultPath}/employees/${employeeData.id}`,
-            contentType: "application/json",
-            dataType: 'json',
-            data: JSON.stringify(employeeData)
-        })
+        method: "PUT",
+        url: `${defaultPath}/employees/${employeeData.id}`,
+        contentType: "application/json",
+        dataType: 'json',
+        data: JSON.stringify(employeeData)
+    })
         .done(function (msg) {
             location.reload();
         });
@@ -228,7 +230,7 @@ function displayPagination() {
     }
 
     //se l'utente è nell'ultima pagina il bottone per andare alla pagina successiva sarà disabilitato
-    if (parseInt(localStorage.getItem("currentPage")) === totalPages-2) {
+    if (parseInt(localStorage.getItem("currentPage")) === totalPages - 2) {
         code += '<li class="disabled me-2"> ' +
             '<a class="page-link no-select" href="#" aria-label="Next">' +
             '<span aria-hidden="true">&raquo</span></a></li>';
