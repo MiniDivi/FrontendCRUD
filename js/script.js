@@ -98,8 +98,10 @@ function displayEmployeeList() {
 function getData() {
     $.ajax({
         method: "GET",
-        //url: `${defaultPath}/employees?page=${parseInt(localStorage.getItem("currentPage"))}&size=${5}`
-        url: `${defaultPath}?page=${parseInt(localStorage.getItem("currentPage"))}&size=${5}`
+        url: `${defaultPath}/employees?page=${parseInt(localStorage.getItem("currentPage"))}&size=${5}`,
+        dataType: "json",
+        contentType: "application/json",
+        
     })
         .done(function (msg) {
             data = msg['_embedded']['employees'];
@@ -116,8 +118,9 @@ function getData() {
 function getEmployeeData(id) {
     $.ajax({
         method: "GET",
-        //url: `${defaultPath}/employees/${id}`
-        url: `${defaultPath}/${id}`
+        url: `${defaultPath}/employees?id=${id}`,
+        dataType: "json",
+        contentType: "application/json"
     })
         .done(function (msg) {
             employeeData.id = msg.id;
@@ -133,12 +136,10 @@ function getEmployeeData(id) {
 function createEmployee() {
     $.ajax({
         method: "POST",
-        url: `${defaultPath}/employees`,
-        contentType: "application/json",
-        dataType: 'json',
+        url: `${defaultPath}`,
         data: JSON.stringify(employeeData)
     })
-        .done(function (msg) {
+        .done(function () {
             location.reload();
         });
 }
@@ -146,7 +147,7 @@ function createEmployee() {
 function deleteEmployee(id) {
     $.ajax({
         method: "DELETE",
-        url: `${defaultPath}/employees/${id}`
+        url: `${defaultPath}?id=${id}`
     })
         .done(function () {
             getData();
@@ -157,12 +158,10 @@ function deleteEmployee(id) {
 function editEmployeePUT() {
     $.ajax({
         method: "PUT",
-        url: `${defaultPath}/employees/${employeeData.id}`,
-        contentType: "application/json",
-        dataType: 'json',
+        url: `${defaultPath}/employees/${id}`,
         data: JSON.stringify(employeeData)
     })
-        .done(function (msg) {
+        .done( function(){
             location.reload();
         });
 }
